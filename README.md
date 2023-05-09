@@ -8,6 +8,7 @@ The bot takes the name and password of your Wi-Fi network as inputs and generate
   <li>aiogram</li>
   <li>wifi_qrcode_generator</li>
 </ul>
+
 # Usage
 Just follow this link: https://t.me/qr_for_your_wifi_creator_bot
 # License
