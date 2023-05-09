@@ -58,37 +58,63 @@ async def generate(message: types.Message):
 
 @dp.message_handler(state=QRInfo.name)
 async def save_name(message: types.Message, state: FSMContext):
-    async with state.proxy() as data:
-        data["name"] = message.text
-    await QRInfo.next()
-    await bot.send_message(
-        chat_id=message.from_user.id, text="А тепер введіть пароль від WI-FI"
-    )
-
+    if validate(message.text):
+        async with state.proxy() as data:
+            data["name"] = message.text
+        await QRInfo.next()
+        await bot.send_message(
+            chat_id=message.from_user.id, text="А тепер введіть пароль від WI-FI"
+        )
+    else:
+        cur_state = await state.get_state()
+        if cur_state is None:
+            return
+        await bot.send_message(
+            chat_id=message.from_user.id,
+            text="Ви ввели забагато символів",
+            reply_markup=start_button(),
+        )
+        await state.finish()
 
 @dp.message_handler(state=QRInfo.password)
 async def save_name(message: types.Message, state: FSMContext):
-    async with state.proxy() as data:
-        data["password"] = message.text
-    await bot.send_message(chat_id=message.from_user.id, text="Вся інформація отримана")
-    async with state.proxy() as data:
-        create_qr_code(data["name"], data["password"])
+    if validate(message.text):
+        async with state.proxy() as data:
+            data["password"] = message.text
+        await bot.send_message(chat_id=message.from_user.id, text="Вся інформація отримана")
+        async with state.proxy() as data:
+            create_qr_code(data["name"], data["password"], message.from_user.username)
+            await bot.send_message(
+                chat_id=message.from_user.id,
+                text=f"Назва вашого WI-FI: *{data['name']}*\nПароль вашого WI-FI: *{data['password']}*",
+                parse_mode="Markdown",
+                reply_markup=start_button(),
+            )
+        await state.finish()
+        async with aiofiles.open(f"{message.from_user.username}.png", "rb") as photo:
+            await bot.send_photo(chat_id=message.chat.id, photo=photo)
+        await os.remove(f"{message.from_user.username}.png")
+    else:
+        cur_state = await state.get_state()
+        if cur_state is None:
+            return
         await bot.send_message(
             chat_id=message.from_user.id,
-            text=f"Назва вашого WI-FI: *{data['name']}*\nПароль вашого WI-FI: *{data['password']}*",
-            parse_mode="Markdown",
+            text="Ви ввели забагато символів",
             reply_markup=start_button(),
         )
-    await state.finish()
-    async with aiofiles.open("qr.png", "rb") as photo:
-        await bot.send_photo(chat_id=message.chat.id, photo=photo)
-    await os.remove("qr.png")
-
+        await state.finish()
 
 @dp.message_handler()
 async def hello(message: types.Message):
     await message.answer("Оберіть дію", reply_markup=start_button())
 
+
+def validate(message):
+    if len(message) > 40:
+        return False
+    else:
+        return True
 
 if __name__ == "__main__":
     executor.start_polling(dispatcher=dp)
