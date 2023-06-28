@@ -1,15 +1,21 @@
 # QR Code Generator for Wi-Fi 
 This is a simple Telegram bot that generates a QR code for your Wi-Fi. 
 The bot takes the name and password of your Wi-Fi network as inputs and generates a QR code that can be scanned to connect to your network.
-# Requirements
-<ul>
-  <li>Python 3.8 or higher</li>
-  <li>aiofiles</li>
-  <li>aiogram</li>
-  <li>wifi_qrcode_generator</li>
-</ul>
+## Requirements
 
-# Usage
-Just follow this link: https://t.me/qr_for_your_wifi_creator_bot
-# License
-This project is licensed under the MIT License. Feel free to use and modify this code as you see fit.
+<p align="center">
+<img alt="Static Badge" src="https://img.shields.io/badge/Python%203.10-795A7D">
+<img alt="Static Badge" src="https://img.shields.io/badge/aiofiles-85A576">
+<img alt="Static Badge" src="https://img.shields.io/badge/aiogram-646A3C">
+<img alt="Static Badge" src="https://img.shields.io/badge/wifi_qrcode_generator-78928E">
+
+
+</p>
+
+
+
+## Developers
+
+- [Holubiev Illya]([GitHub Profile Link](https://github.com/HolubievIllya))
+## License
+Project automated_data_import_system is distributed under MIT license.
