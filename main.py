@@ -7,7 +7,6 @@ from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher.filters.state import StatesGroup, State
 from qr import create_qr_code
 from bot_buttons import *
-from db_users import insert_id
 import config
 
 storage = MemoryStorage()
@@ -22,7 +21,6 @@ class QRInfo(StatesGroup):
 
 @dp.message_handler(commands="start")
 async def start(message: types.Message):
-    insert_id(message.from_user.username)
     await bot.send_message(
         chat_id=message.from_user.id,
         text="Вас вітає бот\n"
